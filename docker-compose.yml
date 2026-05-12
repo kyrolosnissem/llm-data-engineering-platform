@@ -1,0 +1,40 @@
+
+services:
+
+  # ── MySQL ───────────────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: ai_platform_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: covid_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./sql/schema_covid.sql:/docker-entrypoint-initdb.d/01_schema_covid.sql
+      - ./sql/schema_tourism.sql:/docker-entrypoint-initdb.d/02_schema_tourism.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Streamlit App ───────────────────────────────────────────────────────
+  app:
+    build: .
+    container_name: ai_platform_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DB_HOST: db          
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data   
+
+volumes:
+  db_data:

@@ -1,0 +1,44 @@
+# Secrets
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtualenvs
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Data files (usually large — don't commit raw data)
+data/
+*.csv
+*.xlsx
+
+# Logs
+*.log
+logs/
+
+# Docker
+*.dockerignore
+
+# DB dumps
+*.sql.bak
