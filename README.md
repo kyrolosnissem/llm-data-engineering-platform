@@ -1,173 +1,156 @@
 # 📊 AI Data Engineering Platform
 
-A production-grade AI-powered data analysis platform built with **Streamlit**, **LangChain**, **Groq LLaMA 3.1**, and **MySQL** — featuring a full ETL pipeline, SQL safety layer, unit tests, and Docker support.
+A production-grade AI-powered Data Engineering system that transforms natural language into SQL insights, interactive dashboards, and Arabic business intelligence.
+
+Built with Streamlit, LangChain, Groq (LLaMA 3.1), MySQL, and Plotly, this platform demonstrates end-to-end Data Engineering + AI integration including ETL pipelines, secure SQL execution, and intelligent visualization.
+
+---
+
+## 🚀 Live Capabilities
+
+- 🧠 Natural Language → SQL Query Engine (English + Arabic)
+- 📊 Auto-generated Interactive Charts (Bar / Line / Pie)
+- 🇸🇦 Arabic AI-generated Insights & Business Summaries
+- 🔒 Secure SQL Execution Layer (Prevents DDL/DML attacks)
+- 🗄️ Multi-Dataset Switching (COVID-19 / Play Store)
+- ⚡ Low-latency LLM inference via Groq (LLaMA 3.1)
+- 🔄 Production-style ETL pipelines for structured ingestion
 
 ---
 
 ## 🏗️ Architecture
 
-```
+User Query (Arabic / English)
+→ Streamlit UI (app.py)
+→ LangChain SQL Agent (agent.py)
+→ SQL Safety Layer (utils.py)
+→ MySQL Database (covid_db / playstore_db)
+→ Pandas DataFrame
+→ Plotly Visualizer
+→ Arabic Insight Generator (LLM)
+→ Final Dashboard Output
+
+---
+
+## 📁 Project Structure
+
 ai-data-engineering-platform/
-│
+
 ├── app/
-│   ├── app.py          # Streamlit UI (thin layer — rendering only)
-│   ├── config.py       # Central config — single source of truth
-│   ├── db.py           # DB connection manager + query runner
-│   ├── agent.py        # SQL Agent logic (LangChain + Groq)
-│   ├── visualizer.py   # Plotly chart builders
-│   └── utils.py        # JSON parser, SQL safety, validators
+│   ├── app.py
+│   ├── config.py
+│   ├── db.py
+│   ├── agent.py
+│   ├── visualizer.py
+│   └── utils.py
 │
 ├── etl/
-│   ├── covid_etl.py    # COVID ETL pipeline (Extract → Transform → Load)
-│   ├── tourism_etl.py  # Tourism ETL pipeline
-│   └── transform.py    # Shared transformation utilities
+│   ├── covid_etl.py
+│   ├── playstore_etl.py
+│   └── transform.py
 │
 ├── sql/
-│   ├── schema_covid.sql    # MySQL schema for covid_db
-│   └── schema_tourism.sql  # MySQL schema for tourism
+│   ├── schema_covid.sql
+│   └── schema_playstore.sql
 │
 ├── tests/
-│   └── test_sql_safety.py  # Unit tests (pytest)
+│   └── test_sql_safety.py
 │
-├── .env.example        # Config template
+├── .env
 ├── requirements.txt
 ├── Dockerfile
-├── docker-compose.yml  # App + MySQL together
-├── main.py             # CLI entry point
 └── README.md
-```
 
 ---
 
 ## ✨ Features
 
-| Feature | Description |
-|---|---|
-| 🤖 Natural Language Queries | Ask in Arabic or English |
-| 📊 Auto Charts | Line / Bar / Donut charts via Plotly |
-| 🧠 Arabic Insights | Professional analysis + recommendations |
-| 🔒 SQL Safety Guard | Whole-word keyword blocking |
-| 🗄️ Multi-DB Support | Switch between covid_db and tourism |
-| 🔄 ETL Pipelines | Clean, transform, load raw CSVs to MySQL |
-| 🧪 Unit Tests | pytest coverage for safety + parsing logic |
-| 🐳 Docker | One-command deployment with docker-compose |
-| 💻 CLI Mode | Run queries or ETL from the terminal |
+### 🤖 AI-Powered SQL Engine
+Ask questions in English or Arabic and get instant SQL results.
+
+### 📊 Smart Visualization Engine
+Automatically generates the best chart type using Plotly.
+
+### 🇸🇦 Arabic Insights
+Human-like explanations and business summaries in Arabic.
+
+### 🔒 SQL Safety Layer
+Blocks dangerous SQL commands (DROP, DELETE, UPDATE).
+
+### ⚡ Groq LLM Acceleration
+Fast inference using LLaMA 3.1 8B.
+
+### 🔄 ETL Pipelines
+Clean, transform, and load datasets into MySQL.
 
 ---
 
-## ⚙️ Setup
+## ⚙️ Installation
 
-### 1. Clone
-
+### 1. Clone Repository
 ```bash
 git clone https://github.com/YOUR_USERNAME/ai-data-engineering-platform.git
 cd ai-data-engineering-platform
-```
 
-### 2. Virtual environment
-
-```bash
+2. Create Virtual Environment
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+
+Activate:
+# Windows
+venv\Scripts\activate
+
+# Mac/Linux
+source venv/bin/activate
+
+3. Install Dependencies
 pip install -r requirements.txt
-```
 
-### 3. Configure `.env`
+4. Setup Environment Variables
+Create .env file:
 
-```bash
-cp .env.example .env
-# Edit .env and fill in GROQ_API_KEY and DB_PASSWORD
-```
+GROQ_API_KEY=your_groq_api_key_here
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
 
-### 4. Set up MySQL schemas
+5. Initialize Database
 
-```bash
 mysql -u root -p < sql/schema_covid.sql
-mysql -u root -p < sql/schema_tourism.sql
-```
+mysql -u root -p < sql/schema_playstore.sql
 
----
+6. Run Application
+cd app
+streamlit run app.py
 
-## 🚀 Running
+💡 Example Queries
+Show top 10 countries by total deaths
+What are the top categories by installs?
 
-### Option A — Local
-
-```bash
-streamlit run app/app.py
-```
-
-Open **http://localhost:8501**
-
-### Option B — Docker (App + MySQL)
-
-```bash
-docker-compose up --build
-```
-
-### Option C — CLI
-
-```bash
-# Run a query
-python main.py --db covid_db --question "أعلى 10 دول في الإصابات"
-python main.py --db tourism  --question "أكثر مدينة تحقق دخلاً"
-
-# Run ETL
-python main.py --etl covid
-python main.py --etl tourism
-```
-
----
-
-## 🔄 ETL Pipeline
-
-1. Put your raw CSV files in `data/`:
-   - `data/covid_raw.csv`
-   - `data/tourism_raw.csv`
-
-2. Run the ETL:
-   ```bash
-   python main.py --etl covid
-   python main.py --etl tourism
-   ```
-
-The pipeline normalizes column names, drops near-empty rows, casts types, fills nulls, deduplicates, and adds derived columns automatically.
-
----
-
-## 🧪 Running Tests
-
-```bash
+🧪 Testing
 pytest tests/ -v
-```
 
-Tests cover: SQL safety (whole-word blocking), JSON extraction from noisy LLM output, and agent response validation.
+Streamlit
+LangChain
+Groq (LLaMA 3.1)
+MySQL
+Plotly
+Pandas
+SQLAlchemy
 
----
+🔒 Security
+SQL injection protection
+Read-only query enforcement
+Query sanitization layer
+Safe execution pipeline
 
-## 🔒 Security
+📦 Deployment
+Supports:
 
-- API keys and passwords stored only in `.env` — never committed
-- SQL safety guard blocks: `DROP`, `DELETE`, `UPDATE`, `INSERT`, `ALTER`, `TRUNCATE`, `CREATE`, `GRANT`, `REVOKE`
-- Whole-word matching prevents false positives (e.g. `insertion_date` is allowed)
-- Docker runs as non-root user
+Docker
+Cloud deployment (AWS / GCP / Render)
+Scalable MySQL backend
 
----
+📝 License
+MIT License
 
-## 🛠️ Tech Stack
 
-| Tool | Role |
-|---|---|
-| [Streamlit](https://streamlit.io) | Web UI |
-| [LangChain](https://langchain.com) | LLM orchestration |
-| [Groq LLaMA 3.1 8B](https://groq.com) | Fast LLM inference |
-| [Plotly](https://plotly.com) | Interactive charts |
-| [SQLAlchemy](https://sqlalchemy.org) | DB connection pooling |
-| [MySQL 8](https://mysql.com) | Data storage |
-| [pytest](https://pytest.org) | Unit testing |
-| [Docker](https://docker.com) | Containerization |
-
----
-
-## 📝 License
-
-MIT
